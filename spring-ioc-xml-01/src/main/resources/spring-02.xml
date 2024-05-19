@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 1.单个构造参数注入 -->
+    <bean id="userDao" class="com.atguigu.ioc_02.UserDao"/>
+
+    <bean id="userService" class="com.atguigu.ioc_02.UserService">
+        <!-- 构造函数引用
+        <constructor-arg 构造参数传值的di配置
+        value = 直接属性值
+        ref = 引用其他的bean beanId值
+        -->
+        <constructor-arg ref="userDao"/>
+    </bean>
+
+    <!-- 2.多个构造参数注入 -->
+    <bean id="userService1" class="com.atguigu.ioc_02.UserService">
+        <!-- 构造函数引用
+        <constructor-arg 构造参数传值的di配置
+        value = 直接属性值 构造参数顺序填写值
+        ref = 引用其他的bean beanId值
+        -->
+        <constructor-arg value="18" />
+        <constructor-arg value="二狗子" />
+        <constructor-arg ref="userDao"/>
+    </bean>
+
+    <bean id="userService2" class="com.atguigu.ioc_02.UserService">
+        <!-- 构造函数引用
+        <constructor-arg 构造参数传值的di配置
+        value = 直接属性值 构造参数名称填写，不用考虑顺序
+        ref = 引用其他的bean beanId值
+        -->
+        <constructor-arg name="age" value="18" />
+        <constructor-arg name="name" value="二狗子" />
+        <constructor-arg name="userDao" ref="userDao"/>
+    </bean>
+
+    <bean id="userService3" class="com.atguigu.ioc_02.UserService">
+        <!-- 构造函数引用
+        <constructor-arg 构造参数传值的di配置
+        value = 直接属性值 构造参数下标填写，不用考虑顺序
+        ref = 引用其他的bean beanId值
+        -->
+        <constructor-arg index="0" value="18" />
+        <constructor-arg index="1" value="二狗子" />
+        <constructor-arg index="2" ref="userDao"/>
+    </bean>
+
+    <!-- 3.触发setter方法进行注入 -->
+    <bean id="movieFinder" class="com.atguigu.ioc_02.MovieFinder" />
+
+    <bean id="simpleMovieLister" class="com.atguigu.ioc_02.SimpleMovieLister">
+        <!-- property标签： 可以给setter方法对应的属性赋值
+        property 标签： name属性代表**set方法标识**、ref代表引用bean的标识id、value属性代表基本属性值
+        -->
+        <property name="movieName" value="消失的她" />
+        <property name="movieFinder" ref="movieFinder" />
+    </bean>
+</beans>

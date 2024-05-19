@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 1.可以使用无参数构造函数实例化的组件
+    -   bean标签：通过配置bean标签告诉IOC容器需要创建对象的组件信息
+    -   id属性：bean的唯一标识,方便后期获取Bean！
+    -   class属性：组件类的全限定符！
+    -   注意：要求当前组件类必须包含无参数构造函数！
+    -->
+    <bean id="happyComponent1" class="com.atguigu.ioc.HappyComponent" />
+
+    <bean id="happyComponent2" class="com.atguigu.ioc.HappyComponent" />
+
+    <!-- 2.静态工厂类声明工厂方法进行ioc的配置 factory-method指定静态工厂法-->
+    <bean id="clientService" class="com.atguigu.ioc.ClientService" factory-method="createInstance" />
+
+    <!-- 3.非静态方法声明ioc的配置 -->
+    <!-- 3.1 配置工厂类的组件信息 -->
+    <bean id="defaultServiceLocator" class="com.atguigu.ioc.DefaultServiceLocator" />
+
+    <!-- 通过指定非静态工厂对象和方法名来配置生成的ioc信息 -->
+    <bean id="clientService2" factory-bean="defaultServiceLocator" factory-method="createClientServiceInstance" />
+</beans>
