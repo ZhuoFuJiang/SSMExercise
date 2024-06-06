@@ -20,6 +20,12 @@
         <module>spring-aop-annotation-10</module>
         <module>spring-aop-xml-11</module>
         <module>spring-tx-annotation-12</module>
+        <module>mybatis-base-quick-01</module>
+        <module>mybatis-base-quick-02</module>
+        <module>mybatis-base-quick-03</module>
+        <module>mybatis-base-crud-04</module>
+        <module>mybatis-high-multitable-05</module>
+        <module>mybatis-high-dynsql-06</module>
     </modules>
 
     <properties>

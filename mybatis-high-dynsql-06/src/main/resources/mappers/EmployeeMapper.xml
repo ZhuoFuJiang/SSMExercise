@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace等于mapper接口类的全限定名,这样实现对应 -->
+<mapper namespace="com.atguigu.mapper.EmployeeMapper">
+
+    <!-- 如果传入条件，就判断，如果没传入条件，就不判断
+         > &gt;
+         < &lt;
+    -->
+    <select id="query" resultType="Employee">
+        select * from t_emp
+        <where>
+        <if test="name != null">
+            emp_name=#{name}
+        </if>
+
+        <if test="salary != null and salary &gt; 100">
+            and emp_salary=#{salary}
+        </if>
+        </where>
+    </select>
+
+    <update id="update">
+        update t_emp
+        <set>
+        <if test="empName != null">
+            emp_name=#{empName},
+        </if>
+
+        <if test="empSalary != null">
+            emp_salary=#{empSalary}
+        </if>
+        </set>
+        where emp_id=#{empId}
+    </update>
+
+    <select id="queryTrim" resultType="Employee">
+        select * from t_emp
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="name != null">
+                emp_name=#{name}
+            </if>
+
+            <if test="salary != null and salary &gt; 100">
+                emp_salary=#{salary}
+            </if>
+        </trim>
+    </select>
+
+    <select id="queryChoose" resultType="Employee">
+        select * from t_emp
+        where
+        <choose>
+                <when test="name != null">
+                    emp_name=#{name}
+                </when>
+
+                <when test="salary != null and salary &gt; 100">
+                    emp_salary=#{salary}
+                </when>
+            <otherwise>1=1</otherwise>
+        </choose>
+    </select>
+
+    <sql id="selectSql">
+        select * form t_emp
+    </sql>
+
+    <select id="queryBatch" resultType="Employee">
+       <include refid="selectSql" /> where emp_id in
+        <foreach collection="ids" open="(" separator="," close=")" item="id">
+            #{id}
+        </foreach>
+    </select>
+
+    <delete id="deleteBatch">
+        delete from t_emp where emp_id in
+        <foreach collection="ids" open="(" separator="," close=")" item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insertBatch">
+        insert into t_emp (emp_name, emp_salary)
+        <foreach collection="list" separator="," item="employee">
+            (#{employee.empName},#{employee.empSalary})
+        </foreach>
+    </insert>
+
+    <update id="updateBatch">
+        <foreach collection="list" item="emp">
+            update t_emp set emp_name=#{emp.empName},emp_salary=#{emp.empSalary} where emp_id=#{emp.empId}
+        </foreach>
+    </update>
+
+    <select id="queryList" resultType="Employee">
+        select * from t_emp where emp_salary > 100
+    </select>
+</mapper>

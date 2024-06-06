@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace等于mapper接口类的全限定名,这样实现对应 -->
+<mapper namespace="com.atguigu.mapper.TeacherMapper">
+    <!-- 传入一个实体对象
+    useGeneratedKeys="true" 想要数据库自动增加的主键值
+    keyColumn="emp_id" 主键列的值
+    keyProperty 接收主键列值的属性
+    -->
+    <insert id="insertTeacher">
+        <!-- 插入之前，先指定一段sql语句，生成一个主键值
+            1、order有两个值 before|after sql够在输入语句之前还是之后执行
+            2、resultType 返回类型
+            3、keyProperty 查询结果给哪个属性赋值
+        -->
+        <selectKey order="BEFORE" resultType="string" keyProperty="tId">
+            select REPLACE(UUID(), '-', '')
+        </selectKey>
+        insert into teacher (t_id, t_name) values (#{tId},#{tName})
+    </insert>
+
+    <!-- 声明resultMap标签，自己自定义映射规则
+         1、id标识 -》select resultMap="标识"
+         2、type -》具体的返回值类型 全限定符和别名 | 集合只写泛型即可
+     -->
+    <resultMap id="tMap" type="teacher">
+        <id column="t_id" property="tId" />
+        <result column="t_name" property="tName" />
+    </resultMap>
+
+    <!-- resultMap自定义映射 -->
+    <select id="queryById" resultMap="tMap" >
+        select t_id, t_name from teacher where t_id = #{id}
+    </select>
+
+</mapper>

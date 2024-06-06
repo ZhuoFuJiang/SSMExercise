@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace等于mapper接口类的全限定名,这样实现对应 -->
+<mapper namespace="com.atguigu.mapper.EmployeeMapper">
+
+    <!-- 查询使用 select标签
+            id = 方法名
+            resultType = 返回值类型
+            标签内编写SQL语句
+            注意：mapper接口不能重载，否则xml文件无法识别
+     -->
+    <select id="queryById" resultType="employee">
+        <!-- #{empId}代表动态传入的参数,并且进行赋值!后面详细讲解 -->
+        <!-- 动态值用#{} 动态列用${} -->
+        select emp_id empId,emp_name empName, emp_salary empSalary from
+        t_emp where emp_id = #{id}
+    </select>
+
+
+    <delete id="deleteById">
+        <!-- #{empId}代表动态传入的参数,并且进行赋值!后面详细讲解 -->
+        delete from t_emp where emp_id = #{id}
+    </delete>
+
+    <!-- 单值 -->
+    <!-- 需要进行映射，但是也可以设置支持驼峰自动转换 mapUnderscoreToCamelCase -->
+    <select id="queryBySalary" resultType="com.atguigu.pojo.Employee">
+        select emp_id empId,emp_name empName, emp_salary empSalary from
+        t_emp where emp_id = #{salary}
+    </select>
+
+    <!-- 传入一个实体对象
+    useGeneratedKeys="true" 想要数据库自动增加的主键值
+    keyColumn="emp_id" 主键列的值
+    keyProperty 接收主键列值的属性
+    -->
+    <insert id="insertEmp" useGeneratedKeys="true" keyColumn="emp_id" keyProperty="empId">
+        insert into t_emp (emp_name, emp_salary) values (#{empName}, #{empSalary})
+    </insert>
+
+    <!-- 多值传参
+       1、注解指定 @Param注解 指定多个简单参数的key
+       2、mybatis默认机制 依据参数顺序 arg0 arg1  形参从左到右依次对应 或者 param1 param2
+     -->
+    <select id="queryByNameAndSalary" resultType="employee">
+        select emp_id,emp_name, emp_salary from t_emp where
+        emp_name=#{a} and emp_salary=#{b}
+    </select>
+
+    <!-- 传入map -->
+    <insert id="insertEmpMap">
+        insert into t_temp (e_name, e_salary) values (#{name},#{salary}})
+    </insert>
+
+    <!-- resultType语法
+         1、类的全限定符号
+         2、别名简称 mybatis提供了72种默认别名
+         基本数据类型 int double -> _int _double
+         包装数据类型 Integer Double -> int double
+         集合容器类型 Map List HashMap -> map list hashmap
+    -->
+    <select id="queryNameById" resultType="string">
+        select emp_name from t_emp where emp_id = #{id}
+    </select>
+
+    <select id="querySalaryById" resultType="double">
+        select emp_salary from t_emp where emp_id = #{id}
+    </select>
+
+    <!-- 当没有实体类可以接值的时候，可以使用map -->
+    <select id="selectEmpNameAndMaxSalary" resultType="map">
+        SELECT
+        emp_name 员工姓名,
+        emp_salary 员工工资,
+        (SELECT AVG(emp_salary) FROM t_emp) 部门平均工资
+        FROM t_emp WHERE emp_salary=(
+        SELECT MAX(emp_salary) FROM t_emp
+        )
+    </select>
+
+    <select id="selectAll" resultType="employee">
+        select emp_id empId,emp_name empName,emp_salary empSalary
+        from t_emp
+    </select>
+</mapper>

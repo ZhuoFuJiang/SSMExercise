@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace等于mapper接口类的全限定名,这样实现对应 -->
+<mapper namespace="com.atguigu.mapper.EmployeeMapper">
+
+    <!-- 查询使用 select标签
+            id = 方法名
+            resultType = 返回值类型
+            标签内编写SQL语句
+            注意：mapper接口不能重载，否则xml文件无法识别
+     -->
+    <select id="queryById" resultType="com.atguigu.pojo.Employee">
+        <!-- #{empId}代表动态传入的参数,并且进行赋值!后面详细讲解 -->
+        <!-- 动态值用#{} 动态列用${} -->
+        select emp_id empId,emp_name empName, emp_salary empSalary from
+        t_emp where emp_id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        <!-- #{empId}代表动态传入的参数,并且进行赋值!后面详细讲解 -->
+        delete from t_emp where emp_id = #{id}
+    </delete>
+
+    <!-- 单值 -->
+    <select id="queryBySalary" resultType="com.atguigu.pojo.Employee">
+        select emp_id empId,emp_name empName, emp_salary empSalary from
+        t_emp where emp_id = #{salary}
+    </select>
+
+    <!-- 传入一个实体对象 -->
+    <insert id="insertEmp">
+        insert into t_emp (emp_name, emp_salary) values (#{empName}, #{empSalary})
+    </insert>
+
+    <!-- 多值传参
+       1、注解指定 @Param注解 指定多个简单参数的key
+       2、mybatis默认机制 依据参数顺序 arg0 arg1  形参从左到右依次对应 或者 param1 param2
+     -->
+    <select id="queryByNameAndSalary" resultType="com.atguigu.pojo.Employee">
+        select emp_id empId,emp_name empName, emp_salary empSalary from t_emp where
+        emp_name=#{a} and emp_salary=#{b}
+    </select>
+
+    <!-- 传入map -->
+    <insert id="insertEmpMap">
+        insert into t_temp (e_name, e_salary) values (#{name},#{salary}})
+    </insert>
+</mapper>
